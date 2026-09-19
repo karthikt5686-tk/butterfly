@@ -1,0 +1,35 @@
+{
+  "name": "Butterfly Kindergarten",
+  "short_name": "Butterfly",
+  "description": "Programmes, curriculum and contact details for Butterfly Kindergarten — a play-based early learning centre for children aged 2 to 6.",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ffc93c",
+  "background_color": "#fff9f0",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "kids"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book a visit",
+      "short_name": "Book",
+      "url": "./contact.html#enquiry",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Academics",
+      "short_name": "Academics",
+      "url": "./academics.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

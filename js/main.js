@@ -38,6 +38,126 @@
     el.textContent = String(new Date().getFullYear());
   });
 
+  /* --- Progressive web app ------------------------------------------- */
+
+  // Registers the service worker that makes the site installable and lets it
+  // work offline. Needs https:// or localhost — it is skipped on file://.
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").then(function (reg) {
+        // Reload once when an updated worker takes over, so a returning
+        // visitor is not left looking at stale pages.
+        var refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", function () {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+
+        reg.addEventListener("updatefound", function () {
+          var next = reg.installing;
+          if (!next) return;
+          next.addEventListener("statechange", function () {
+            if (next.state === "installed" && navigator.serviceWorker.controller) {
+              next.postMessage("skip-waiting");
+            }
+          });
+        });
+      })["catch"](function (err) {
+        console.warn("Service worker registration failed:", err);
+      });
+    });
+  }
+
+  /* --- Install banner --------------------------------------------------
+     Chrome and Edge fire beforeinstallprompt; we defer it and offer our own
+     button. iOS Safari has no such event, so it gets a short instruction
+     instead. Either way the banner only ever shows in a browser tab. */
+
+  var DISMISS_KEY = "butterfly-install-dismissed";
+
+  function stored(key) {
+    try { return window.localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function remember(key, value) {
+    try { window.localStorage.setItem(key, value); } catch (e) { /* private mode */ }
+  }
+
+  function isStandalone() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function buildBanner(bodyHtml, actionsHtml) {
+    var bar = document.createElement("div");
+    bar.className = "install-bar";
+    bar.setAttribute("role", "region");
+    bar.setAttribute("aria-label", "Install this app");
+    bar.innerHTML =
+      '<div class="install-bar__text">' + bodyHtml + "</div>" +
+      '<div class="install-bar__actions">' + actionsHtml +
+      '<button class="btn btn--ghost" type="button" data-install-dismiss>Not now</button></div>';
+    document.body.appendChild(bar);
+
+    bar.querySelector("[data-install-dismiss]").addEventListener("click", function () {
+      remember(DISMISS_KEY, "1");
+      bar.remove();
+    });
+
+    requestAnimationFrame(function () { bar.classList.add("is-visible"); });
+    return bar;
+  }
+
+  if (!isStandalone() && stored(DISMISS_KEY) !== "1") {
+    var deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredPrompt = event;
+
+      var bar = buildBanner(
+        "<strong>Install Butterfly Kindergarten</strong>" +
+          "<span>Add it to your home screen — it works offline.</span>",
+        '<button class="btn btn--primary" type="button" data-install-go>Install</button>'
+      );
+
+      bar.querySelector("[data-install-go]").addEventListener("click", function () {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () {
+          deferredPrompt = null;
+          remember(DISMISS_KEY, "1");
+          bar.remove();
+        });
+      });
+    });
+
+    window.addEventListener("appinstalled", function () {
+      remember(DISMISS_KEY, "1");
+      var bar = document.querySelector(".install-bar");
+      if (bar) bar.remove();
+    });
+
+    // iOS: no install event exists, so explain the Share-sheet route once.
+    var ua = window.navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+
+    if (isIOS && isSafari) {
+      window.setTimeout(function () {
+        if (document.querySelector(".install-bar")) return;
+        buildBanner(
+          "<strong>Add to your home screen</strong>" +
+            "<span>Tap Share, then &ldquo;Add to Home Screen&rdquo;.</span>",
+          ""
+        );
+      }, 2500);
+    }
+  }
+
   /* --- Contact form ---------------------------------------------------- */
 
   var form = document.getElementById("enquiryForm");

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're offline — Butterfly Kindergarten</title>
+<meta name="theme-color" content="#ffc93c">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main id="main" class="section" style="min-height:100vh; display:grid; place-items:center; text-align:center;">
+  <div class="wrap" style="max-width:520px;">
+    <svg width="96" height="96" viewBox="0 0 64 64" role="img" aria-hidden="true" style="margin:0 auto 20px;">
+      <ellipse cx="20" cy="22" rx="16" ry="13" fill="#ff7a5c" transform="rotate(-20 20 22)"/>
+      <ellipse cx="44" cy="22" rx="16" ry="13" fill="#ffc93c" transform="rotate(20 44 22)"/>
+      <ellipse cx="22" cy="43" rx="12" ry="10" fill="#4fb8e0" transform="rotate(20 22 43)"/>
+      <ellipse cx="42" cy="43" rx="12" ry="10" fill="#5fc47b" transform="rotate(-20 42 43)"/>
+      <rect x="30" y="14" width="4" height="38" rx="2" fill="#2b3a55"/>
+      <circle cx="32" cy="13" r="4" fill="#2b3a55"/>
+      <path d="M32 11 L26 4 M32 11 L38 4" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="eyebrow">No connection</span>
+    <h1>This page hasn't been saved yet</h1>
+    <p style="color:var(--ink-soft);">
+      You're offline, and this is one page the app hasn't stored. Pages you've
+      already opened still work — try again once you have a signal.
+    </p>
+    <div class="hero__actions" style="justify-content:center;">
+      <button class="btn btn--primary" type="button" onclick="location.reload()">Try again</button>
+      <a class="btn btn--ghost" href="index.html">Go to home page</a>
+    </div>
+    <p class="form-note" style="margin-top:24px;">
+      Need us now? Call <a href="tel:+15551234567">(555) 123-4567</a>.
+    </p>
+  </div>
+</main>
+</body>
+</html>

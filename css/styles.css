@@ -879,6 +879,70 @@ details p {
   color: var(--ink-soft);
 }
 
+/* --- Install banner (PWA) --------------------------------------------- */
+
+.install-bar {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 80;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: 560px;
+  margin-inline: auto;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.install-bar.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.install-bar__text strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 1rem;
+}
+
+.install-bar__text span {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.install-bar__actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.install-bar .btn {
+  padding: 9px 18px;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 480px) {
+  .install-bar { flex-direction: column; align-items: stretch; text-align: center; }
+  .install-bar__actions { justify-content: center; }
+}
+
+/* In the installed app there is no browser chrome, so give the sticky header
+   and the page room for the device's status bar and home indicator. */
+@media (display-mode: standalone) {
+  .site-header { padding-top: env(safe-area-inset-top); }
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
+
 /* --- Footer ----------------------------------------------------------- */
 
 .site-footer {
